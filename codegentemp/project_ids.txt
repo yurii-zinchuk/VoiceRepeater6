@@ -1,0 +1,15 @@
+C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design1.cydsn\Design1.cyprj|19b758b5-ef9f-4a05-a138-8f1005775e96
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|2ae37f6a-0078-415b-bb00-822f7c4ca930
+C:\Users\zinch\Documents\PSoC Creator\4.4\Downloads ( 4.4).cylib\Downloads ( 4.4).cyprj|6eeb9eb7-e9df-4dae-b7e8-4c7e61aa3f57
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|4c898543-201f-46e0-b372-75fe4cec5a35
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|63ad5bee-bea0-4983-a1cc-532d100edcdc
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|d692cec3-01d7-40f3-9345-78b90721bbdd
+C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design2.cydsn\Design2.cyprj|4685dc88-5287-4c9b-87e3-7e3595063d31
+C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design3.cydsn\Design3.cyprj|f947650d-de2e-41ea-a9d3-1c3f68e788a1
+C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design4.cydsn\Design4.cyprj|cc470483-3677-4a2a-bb93-7159ec020031
+C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design5.cydsn\Design5.cyprj|279a07f4-bcdf-438b-84fb-fefe64b4710c
+C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design6.cydsn\Design6.cyprj|16f4ce85-e975-4204-99ca-9a1b9d5b6b31
+C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design12.cydsn\Design12.cyprj|ebeb61d3-cb51-4bb0-b099-5e8c139ddd7d
+C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design13.cydsn\Design13.cyprj|4e772c00-ca89-498e-a3c7-72dd32c1fce6
+C:\Users\zinch\Documents\PSoC Creator\Workspace01\VoiceRepeater.cydsn\VoiceRepeater.cyprj|bc4190d1-a1af-4132-9151-b596423571f3
+C:\Users\zinch\Documents\PSoC Creator\Workspace01\VoiceRepeater_onPSoC6.cydsn\VoiceRepeater_onPSoC6.cyprj|3dc579e6-9443-461c-b754-71845dc4add0
