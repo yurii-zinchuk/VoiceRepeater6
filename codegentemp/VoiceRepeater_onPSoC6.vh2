@@ -2,7 +2,7 @@
 --	Conversion of VoiceRepeater_onPSoC6.v to vh2:
 --
 --	Cypress Semiconductor - WARP Version 6.3 IR 41
---	Sun Dec 25 02:57:18 2022
+--	Mon Dec 26 01:27:02 2022
 --
 
 USE cypress.cypress.all;
@@ -456,6 +456,24 @@ TERMINAL tmpSIOVREF__RED_net_0 : bit;
 SIGNAL tmpFB_0__BLUE_net_0 : bit;
 SIGNAL tmpIO_0__BLUE_net_0 : bit;
 TERMINAL tmpSIOVREF__BLUE_net_0 : bit;
+SIGNAL \VDAC_1:Net_1\ : bit;
+TERMINAL \VDAC_1:ref_drive\ : bit;
+TERMINAL \VDAC_1:Net_3\ : bit;
+TERMINAL \VDAC_1:ct_vout\ : bit;
+TERMINAL \VDAC_1:ct_vout_sw\ : bit;
+SIGNAL \VDAC_1:strobe\ : bit;
+SIGNAL Net_856 : bit;
+TERMINAL Net_846 : bit;
+TERMINAL \VDAC_1:ct_vout_buf\ : bit;
+TERMINAL \VDAC_1:Net_16\ : bit;
+TERMINAL \VDAC_1:Net_9\ : bit;
+TERMINAL \VDAC_1:Net_10\ : bit;
+TERMINAL \VDAC_1:Net_42\ : bit;
+SIGNAL \VDAC_1:Net_44\ : bit;
+TERMINAL Net_848 : bit;
+SIGNAL tmpFB_0__VoiceOut_net_0 : bit;
+SIGNAL tmpIO_0__VoiceOut_net_0 : bit;
+TERMINAL tmpSIOVREF__VoiceOut_net_0 : bit;
 BEGIN
 
 one <=  ('1') ;
@@ -1966,5 +1984,72 @@ R_2:cy_annotation_universal_v1_0
 		port_names=>"T1, T2",
 		width=>2)
 	PORT MAP(connect=>(Net_71, Net_497));
+\VDAC_1:CTDAC\:cy_mxs40_ctdac_v1_0
+	GENERIC MAP(cy_registers=>"")
+	PORT MAP(clock=>zero,
+		ctdrefdrive=>\VDAC_1:ref_drive\,
+		ctdrefsense=>\VDAC_1:Net_3\,
+		ctdvout=>\VDAC_1:ct_vout\,
+		ctdvoutsw=>\VDAC_1:ct_vout_sw\,
+		dsi_ctdac_strobe=>zero,
+		tr_ctdac_empty=>Net_856);
+\VDAC_1:cy_analog_virtualmux_1_connect\:cy_connect_v1_0
+	GENERIC MAP(sig_width=>1,
+		is_net_join=>'0')
+	PORT MAP(signal1=>Net_846,
+		signal2=>\VDAC_1:ct_vout_sw\);
+\VDAC_1:cy_analog_virtualmux_3_connect\:cy_connect_v1_0
+	GENERIC MAP(sig_width=>1,
+		is_net_join=>'0')
+	PORT MAP(signal1=>\VDAC_1:ct_vout_buf\,
+		signal2=>\VDAC_1:Net_16\);
+\VDAC_1:cy_analog_noconnect_2\:cy_analog_noconnect_v1_0
+	PORT MAP(noconnect=>\VDAC_1:Net_9\);
+\VDAC_1:cy_analog_virtualmux_2_connect\:cy_connect_v1_0
+	GENERIC MAP(sig_width=>1,
+		is_net_join=>'0')
+	PORT MAP(signal1=>\VDAC_1:Net_10\,
+		signal2=>\VDAC_1:Net_42\);
+\VDAC_1:cy_analog_noconnect_3\:cy_analog_noconnect_v1_0
+	PORT MAP(noconnect=>\VDAC_1:Net_42\);
+\VDAC_1:cy_analog_noconnect_4\:cy_analog_noconnect_v1_0
+	PORT MAP(noconnect=>\VDAC_1:Net_3\);
+\VDAC_1:vref_out__cy_connect_v1_0\:cy_connect_v1_0
+	GENERIC MAP(sig_width=>1,
+		is_net_join=>'0')
+	PORT MAP(signal1=>Net_848,
+		signal2=>\VDAC_1:ref_drive\);
+VoiceOut:cy_mxs40_gpio_v1_0
+	GENERIC MAP(cy_registers=>"",
+		width=>1,
+		sio_grp_cnt=>0,
+		id=>"c519cbdb-dfac-48d2-9f5c-e4b2a092f0df",
+		drive_mode=>"0",
+		ibuf_enabled=>"0",
+		init_dr_st=>"1",
+		input_sync=>"0",
+		intr_mode=>"0",
+		io_voltage=>"",
+		output_conn=>"0",
+		oe_conn=>"0",
+		output_sync=>"0",
+		oe_sync=>"0",
+		drive_strength=>"0",
+		max_frequency=>"100",
+		output_current_cap=>"8",
+		i2c_mode=>"0",
+		pin_aliases=>"",
+		pin_mode=>"A",
+		slew_rate=>"0",
+		vtrip=>"0",
+		use_annotation=>"0",
+		hotswap_needed=>"0")
+	PORT MAP(oe=>(one),
+		y=>(zero),
+		fb=>(tmpFB_0__VoiceOut_net_0),
+		analog=>Net_846,
+		io=>(tmpIO_0__VoiceOut_net_0),
+		annotation=>(open),
+		siovref=>(tmpSIOVREF__VoiceOut_net_0));
 
 END R_T_L;

@@ -1,6 +1,6 @@
 // ======================================================================
 // VoiceRepeater_onPSoC6.v generated from TopDesign.cysch
-// 12/25/2022 at 02:57
+// 12/26/2022 at 01:26
 // This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 // ======================================================================
 
@@ -2057,9 +2057,105 @@ module CapSense_v3_0_2 ;
 
 endmodule
 
+// bIncludeDriverToComponent_v1_0(PDL_DRIVER_NAME=ctb, PDL_DRIVER_REQ_VERSION=1.10, PDL_DRIVER_SUBGROUP=, PDL_DRIVER_VARIANT=, CY_API_CALLBACK_HEADER_INCLUDE=#include "cyapicallbacks.h", CY_COMMENT=, CY_COMPONENT_NAME=bIncludeDriverToComponent_v1_0, CY_CONFIG_TITLE=IncludeDriver_1, CY_CONST_CONFIG=true, CY_CONTROL_FILE=<:default:>, CY_DATASHEET_FILE=<:default:>, CY_FITTER_NAME=VDAC_1:IncludeDriver_1, CY_INSTANCE_SHORT_NAME=IncludeDriver_1, CY_MAJOR_VERSION=1, CY_MINOR_VERSION=0, CY_PDL_DRIVER_NAME=ctb, CY_PDL_DRIVER_REQ_VERSION=1.10, CY_PDL_DRIVER_SUBGROUP=, CY_PDL_DRIVER_VARIANT=, CY_REMOVE=false, CY_SUPPRESS_API_GEN=false, CY_VERSION=PSoC Creator  4.4, INSTANCE_NAME=VDAC_1_IncludeDriver_1, )
+module bIncludeDriverToComponent_v1_0_3 ;
+
+
+
+
+
+endmodule
+
+// VDAC12_PDL_v2_0(DacCodeMode=0, DebugEnable=false, DeepSleep=false, DwrExtAfterCustomized=false, DwrRefExternal=0, GainBandwidth=2, InitialCode=0, InitialVoltage_mV=0, OpampIDD=2, OpAmpUsage=0, OutputBuffer=0, OutputBufferPower=2, OutputBufferRange=0, RefBufferRange=0, ReferenceCurrentHigh=true, SampleAndHold=false, ShowClk=false, ShowStrobe=false, ShowTrig=false, UpdateMode=0, VrefSource=1, VrefVoltage=1.2, VrefVoltage_mV=3300, CY_API_CALLBACK_HEADER_INCLUDE=#include "cyapicallbacks.h", CY_COMMENT=, CY_COMPONENT_NAME=VDAC12_PDL_v2_0, CY_CONFIG_TITLE=VDAC_1, CY_CONST_CONFIG=true, CY_CONTROL_FILE=<:default:>, CY_DATASHEET_FILE=<:default:>, CY_FITTER_NAME=VDAC_1, CY_INSTANCE_SHORT_NAME=VDAC_1, CY_MAJOR_VERSION=2, CY_MINOR_VERSION=0, CY_PDL_DRIVER_NAME=ctdac, CY_PDL_DRIVER_REQ_VERSION=2.0, CY_PDL_DRIVER_SUBGROUP=, CY_PDL_DRIVER_VARIANT=, CY_REMOVE=false, CY_SUPPRESS_API_GEN=false, CY_VERSION=PSoC Creator  4.4, INSTANCE_NAME=VDAC_1, )
+module VDAC12_PDL_v2_0_4 (
+    clock,
+    strobe,
+    trigger,
+    vout,
+    vref,
+    vref_out);
+    input       clock;
+    input       strobe;
+    output      trigger;
+    inout       vout;
+    electrical  vout;
+    inout       vref;
+    electrical  vref;
+    inout       vref_out;
+    electrical  vref_out;
+
+
+    electrical  ct_vout_sw;
+    electrical  ct_vout_buf;
+    electrical  ct_vout;
+    electrical  ref_drive;
+          wire  Net_58;
+          wire  Net_48;
+          wire  Net_44;
+    electrical  Net_43;
+    electrical  Net_42;
+          wire  Net_36;
+          wire  Net_34;
+    electrical  Net_3;
+    electrical  Net_14;
+    electrical  Net_16;
+          wire  Net_1;
+    electrical  Net_9;
+    electrical  Net_10;
+
+    cy_mxs40_ctdac_v1_0 CTDAC (
+        .clock(Net_1),
+        .ctdrefdrive(ref_drive),
+        .ctdrefsense(Net_3),
+        .ctdvout(ct_vout),
+        .ctdvoutsw(ct_vout_sw),
+        .dsi_ctdac_strobe(strobe),
+        .tr_ctdac_empty(trigger));
+
+	// cy_analog_virtualmux_1 (cy_analog_virtualmux_v1_0)
+	cy_connect_v1_0 cy_analog_virtualmux_1_connect(vout, ct_vout_sw);
+	defparam cy_analog_virtualmux_1_connect.sig_width = 1;
+
+	// cy_analog_virtualmux_3 (cy_analog_virtualmux_v1_0)
+	cy_connect_v1_0 cy_analog_virtualmux_3_connect(ct_vout_buf, Net_16);
+	defparam cy_analog_virtualmux_3_connect.sig_width = 1;
+
+    cy_analog_noconnect_v1_0 cy_analog_noconnect_2 (
+        .noconnect(Net_9));
+
+	// cy_analog_virtualmux_2 (cy_analog_virtualmux_v1_0)
+	cy_connect_v1_0 cy_analog_virtualmux_2_connect(Net_10, Net_42);
+	defparam cy_analog_virtualmux_2_connect.sig_width = 1;
+
+    cy_analog_noconnect_v1_0 cy_analog_noconnect_3 (
+        .noconnect(Net_42));
+
+    cy_analog_noconnect_v1_0 cy_analog_noconnect_4 (
+        .noconnect(Net_3));
+
+    assign Net_44 = 1'h0;
+
+	// VirtualMux_1 (cy_virtualmux_v1_0)
+	assign Net_1 = Net_44;
+
+    bIncludeDriverToComponent_v1_0_3 IncludeDriver_1 ();
+
+
+    cy_connect_v1_0 vref_out__cy_connect_v1_0(vref_out, ref_drive);
+    defparam vref_out__cy_connect_v1_0.sig_width = 1;
+
+
+endmodule
+
 // top
 module top ;
 
+    electrical  Net_848;
+    electrical  Net_843;
+    electrical  Net_846;
+          wire  Net_856;
+          wire  Net_844;
+          wire  Net_857;
           wire  Net_129;
           wire  Net_137;
           wire  Net_134;
@@ -2259,6 +2355,51 @@ module top ;
     defparam R_2.comp_name = "Resistor_v1_0";
     defparam R_2.port_names = "T1, T2";
     defparam R_2.width = 2;
+
+    VDAC12_PDL_v2_0_4 VDAC_1 (
+        .clock(1'b0),
+        .strobe(1'b0),
+        .trigger(Net_856),
+        .vout(Net_846),
+        .vref(Net_843),
+        .vref_out(Net_848));
+
+	wire [0:0] tmpFB_0__VoiceOut_net;
+	wire [0:0] tmpIO_0__VoiceOut_net;
+	electrical [0:0] tmpSIOVREF__VoiceOut_net;
+
+	cy_mxs40_gpio_v1_0
+		#(.id("c519cbdb-dfac-48d2-9f5c-e4b2a092f0df"),
+		  .width(1),
+		  .sio_grp_cnt(0),
+		  .drive_mode("0"),
+		  .ibuf_enabled("0"),
+		  .init_dr_st("1"),
+		  .input_sync("0"),
+		  .intr_mode("0"),
+		  .io_voltage(""),
+		  .output_conn("0"),
+		  .oe_conn("0"),
+		  .output_sync("0"),
+		  .oe_sync("0"),
+		  .drive_strength("0"),
+		  .max_frequency("100"),
+		  .i2c_mode("0"),
+		  .output_current_cap("8"),
+		  .pin_aliases(""),
+		  .pin_mode("A"),
+		  .slew_rate("0"),
+		  .vtrip("0"),
+		  .use_annotation("0"),
+		  .hotswap_needed("0"))
+		VoiceOut
+		 (.oe({1'b1}),
+		  .y({1'b0}),
+		  .fb({tmpFB_0__VoiceOut_net[0:0]}),
+		  .analog({Net_846}),
+		  .io({tmpIO_0__VoiceOut_net[0:0]}),
+		  .siovref(tmpSIOVREF__VoiceOut_net));
+
 
 
 

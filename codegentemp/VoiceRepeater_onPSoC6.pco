@@ -1,5 +1,5 @@
 # VoiceRepeater_onPSoC6
-# 2022-12-25 00:57:25Z
+# 2022-12-25 23:27:08Z
 
 dont_use_location p4usbcell -1 -1 0
 dont_use_location USB -1 -1 0
@@ -19,6 +19,7 @@ set_io "\CapSense:CintA(0)\" iocell 7 1
 set_io "\CapSense:Tx(0)\" iocell 1 0
 set_io "RED(0)" iocell 0 3
 set_io "BLUE(0)" iocell 11 1
+set_io "VoiceOut(0)" iocell 9 6
 set_location "\ADC:IRQ\" interrupt -1 -1 138
 set_location "\ADC:SAR\" SARADC -1 -1 0
 set_location "\UART:SCB_IRQ\" interrupt -1 -1 46
@@ -26,3 +27,4 @@ set_location "\UART:SCB\" SCB -1 -1 5
 set_location "\CapSense:IDACMod\" CSIDAC7 -1 -1 0
 set_location "\CapSense:CSD\" CSD -1 -1 0
 set_location "\CapSense:ISR\" interrupt -1 -1 49
+set_location "\VDAC_1:CTDAC\" CTDAC -1 -1 0

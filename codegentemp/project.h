@@ -15,6 +15,8 @@
 ********************************************************************************/
 
 #include "cy8c6347bzi_bld53.h"
+#include "cy_ctb.h"
+#include "cy_ctdac.h"
 #include "cy_efuse.h"
 #include "cy_flash.h"
 #include "cy_gpio.h"
@@ -115,6 +117,7 @@
 #include "CapSense_Configuration.h"
 #include "CapSense_SensingCSX_LL.h"
 #include "CapSense_RegisterMap.h"
+#include "VDAC_1.h"
 #include "ADC_intSarClock.h"
 #include "UART_SCBCLK.h"
 #include "CapSense_ModClk.h"

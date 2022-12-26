@@ -39,6 +39,10 @@
 #define UART_SCBCLK__DIV_NUM 1
 #define UART_SCBCLK__DIV_TYPE CY_SYSCLK_DIV_8_BIT
 
+/* VDAC_1 */
+#define VDAC_1_CTDAC__HW CTDAC0
+#define VDAC_1_CTDAC__IDX 0
+
 /* CapSense */
 #define CapSense_CSD__CMOD_PAD 1u
 #define CapSense_CSD__CSH_TANK_PAD 2u

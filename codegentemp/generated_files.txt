@@ -38,6 +38,8 @@
   <file name="C:\Users\zinch\Documents\PSoC Creator\Workspace01\VoiceRepeater_onPSoC6.cydsn\codegentemp\CapSense_SensingCSX_LL.h" value="HEADER;;;;;CapSense" />
   <file name="C:\Users\zinch\Documents\PSoC Creator\Workspace01\VoiceRepeater_onPSoC6.cydsn\codegentemp\CapSense_SensingCSX_LL.c" value="SOURCE_C;CortexM0p,CortexM4;;;;CapSense" />
   <file name="C:\Users\zinch\Documents\PSoC Creator\Workspace01\VoiceRepeater_onPSoC6.cydsn\codegentemp\CapSense_RegisterMap.h" value="HEADER;;;;;CapSense" />
+  <file name="C:\Users\zinch\Documents\PSoC Creator\Workspace01\VoiceRepeater_onPSoC6.cydsn\codegentemp\VDAC_1.c" value="SOURCE_C;CortexM0p,CortexM4;;;;VDAC_1" />
+  <file name="C:\Users\zinch\Documents\PSoC Creator\Workspace01\VoiceRepeater_onPSoC6.cydsn\codegentemp\VDAC_1.h" value="HEADER;;;;;VDAC_1" />
   <file name="C:\Users\zinch\Documents\PSoC Creator\Workspace01\VoiceRepeater_onPSoC6.cydsn\codegentemp\ADC_intSarClock.h" value="HEADER;;;;;ADC_intSarClock" />
   <file name="C:\Users\zinch\Documents\PSoC Creator\Workspace01\VoiceRepeater_onPSoC6.cydsn\codegentemp\UART_SCBCLK.h" value="HEADER;;;;;UART_SCBCLK" />
   <file name="C:\Users\zinch\Documents\PSoC Creator\Workspace01\VoiceRepeater_onPSoC6.cydsn\codegentemp\CapSense_ModClk.h" value="HEADER;;;;;CapSense_ModClk" />

@@ -11,8 +11,10 @@
       <Data key="16fd92ce-2c30-4319-8767-de66084af890/2605f567-73b7-435d-b3b9-174766b96934" value="CapSense_CintA" />
       <Data key="16fd92ce-2c30-4319-8767-de66084af890/dbc12ae1-a607-4701-99cc-6261716a9147" value="CapSense_CintB" />
       <Data key="0113321b-4a37-46f6-8407-2f8646c68756" value="Avoice" />
-      <Data key="223242a2-b0a2-477b-8f22-9d23fd591ef6" value="blueled" />
-      <Data key="a61270bc-07ec-447d-ac9e-34cfe85c30e9" value="redled" />
+      <Data key="223242a2-b0a2-477b-8f22-9d23fd591ef6" value="BLUE" />
+      <Data key="a61270bc-07ec-447d-ac9e-34cfe85c30e9" value="RED" />
+      <Data key="a66066c9-a38a-47db-a5dd-3ff7a8d86216" value="Pin_1" />
+      <Data key="c519cbdb-dfac-48d2-9f5c-e4b2a092f0df" value="VoiceOut" />
       <Data key="e9607131-32b6-4671-9f79-efa854d7c741/65f3af6c-759b-4ccb-8c66-5c95ba1f5f4f" value="UART_tx" />
       <Data key="e9607131-32b6-4671-9f79-efa854d7c741/b7e8018e-1ef7-49c0-b5a5-61641a03e31c" value="UART_rx" />
     </Group>
@@ -638,6 +640,16 @@
     <Group key="a61270bc-07ec-447d-ac9e-34cfe85c30e9">
       <Group key="0">
         <Data key="Port Format" value="0,3" />
+      </Group>
+    </Group>
+    <Group key="a66066c9-a38a-47db-a5dd-3ff7a8d86216">
+      <Group key="0">
+        <Data key="Port Format" value="9,7" />
+      </Group>
+    </Group>
+    <Group key="c519cbdb-dfac-48d2-9f5c-e4b2a092f0df">
+      <Group key="0">
+        <Data key="Port Format" value="9,6" />
       </Group>
     </Group>
     <Group key="e9607131-32b6-4671-9f79-efa854d7c741/65f3af6c-759b-4ccb-8c66-5c95ba1f5f4f">

@@ -128,6 +128,28 @@
 #define UART_tx_SLEWRATE CY_GPIO_SLEW_FAST
 #define UART_tx_THRESHOLD_LEVEL CY_GPIO_VTRIP_CMOS
 
+/* VoiceOut */
+#define VoiceOut_0_DRIVEMODE CY_GPIO_DM_ANALOG
+#define VoiceOut_0_INBUF_ENABLED 0u
+#define VoiceOut_0_INIT_DRIVESTATE 1u
+#define VoiceOut_0_INIT_MUXSEL 0u
+#define VoiceOut_0_INPUT_SYNC 2u
+#define VoiceOut_0_INTERRUPT_MODE CY_GPIO_INTR_DISABLE
+#define VoiceOut_0_NUM 6u
+#define VoiceOut_0_PORT GPIO_PRT9
+#define VoiceOut_0_SLEWRATE CY_GPIO_SLEW_FAST
+#define VoiceOut_0_THRESHOLD_LEVEL CY_GPIO_VTRIP_CMOS
+#define VoiceOut_DRIVEMODE CY_GPIO_DM_ANALOG
+#define VoiceOut_INBUF_ENABLED 0u
+#define VoiceOut_INIT_DRIVESTATE 1u
+#define VoiceOut_INIT_MUXSEL 0u
+#define VoiceOut_INPUT_SYNC 2u
+#define VoiceOut_INTERRUPT_MODE CY_GPIO_INTR_DISABLE
+#define VoiceOut_NUM 6u
+#define VoiceOut_PORT GPIO_PRT9
+#define VoiceOut_SLEWRATE CY_GPIO_SLEW_FAST
+#define VoiceOut_THRESHOLD_LEVEL CY_GPIO_VTRIP_CMOS
+
 /* CapSense_Rx */
 #define CapSense_Rx_0_DRIVEMODE CY_GPIO_DM_ANALOG
 #define CapSense_Rx_0_INBUF_ENABLED 0u

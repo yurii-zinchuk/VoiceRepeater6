@@ -396,6 +396,23 @@ void Cy_SystemInit(void)
 	    (void)Cy_GPIO_Port_Init(GPIO_PRT8, &port8_cfg);
 	}
 
+	/* Port9 configuration */
+	{
+	    const cy_stc_gpio_prt_config_t port9_cfg =
+	    {
+	        .out        = 0x00000040u,
+	        .intrMask   = 0x00000000u,
+	        .intrCfg    = 0x00000000u,
+	        .cfg        = 0x00000000u,
+	        .cfgIn      = 0x00000000u,
+	        .cfgOut     = 0x00000000u,
+	        .cfgSIO     = 0x00000000u,
+	        .sel0Active = 0x00000000u,
+	        .sel1Active = 0x00000000u,
+	    };
+	    (void)Cy_GPIO_Port_Init(GPIO_PRT9, &port9_cfg);
+	}
+
 	/* Port10 configuration */
 	{
 	    const cy_stc_gpio_prt_config_t port10_cfg =
