@@ -7290,6 +7290,12 @@
 <file name=".\Generated_Source\PSoC6\CapSense_SensingCSD_LL.c" />
 </CyGuid_1173175f-1b9b-4ad4-a065-754a48a27021>
 </dependency_info>
+<dependency_info name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@CortexM0p" xml_contents_version="2">
+<CyGuid_1173175f-1b9b-4ad4-a065-754a48a27021 type_name="CyDesigner.Common.Base.CyFileDeps" version="1" />
+</dependency_info>
+<dependency_info name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@CortexM4" xml_contents_version="2">
+<CyGuid_1173175f-1b9b-4ad4-a065-754a48a27021 type_name="CyDesigner.Common.Base.CyFileDeps" version="1" />
+</dependency_info>
 </CyGuid_f44455c5-3770-4452-b988-0a7a7ff46256>
 </name>
 <name v="link_deps">
