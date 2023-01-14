@@ -1,17 +1,6 @@
-C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design1.cydsn\Design1.cyprj|2f974b01-0ca9-4069-adae-725cf1240dc5
-C:\Program Files (x86)\Cypress\PSoC Creator\4.3\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|e2682ae4-9c32-4ed9-866d-7ad97094c03d
-C:\Users\zinch\Documents\PSoC Creator\4.3\Downloads ( 4.3).cylib\Downloads ( 4.3).cyprj|13a5c333-73b6-4644-a153-3591408fc381
-C:\Program Files (x86)\Cypress\PSoC Creator\4.3\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|ea94e1fc-55a8-4da7-a9ff-8a6c2d29db89
-C:\Program Files (x86)\Cypress\PSoC Creator\4.3\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|4d856799-8882-4e00-aae0-e05d50100911
-C:\Program Files (x86)\Cypress\PSoC Creator\4.3\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|7244dca4-90c1-49ad-aa5a-d41aabaa36d8
-C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design2.cydsn\Design2.cyprj|c06aed57-0776-4d7b-8e2c-58cfb4575275
-C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design3.cydsn\Design3.cyprj|08d5ca48-4af3-49d6-9523-7eb9f3ecb9a9
-C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design4.cydsn\Design4.cyprj|c7c66152-1e1d-44db-bbd4-5f29473d8640
-C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design5.cydsn\Design5.cyprj|4207cc8d-d87c-4fdd-94b0-a3bb13fbde88
-C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design6.cydsn\Design6.cyprj|86b5f675-6e50-485e-8d2c-d35caeebe988
-C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design12.cydsn\Design12.cyprj|22979fd6-980c-4bf2-be94-dcdfc7f36cf1
-C:\Users\zinch\Documents\PSoC Creator\Workspace01\Design13.cydsn\Design13.cyprj|1444399e-533a-4737-bb25-8cf3a4035b43
-C:\Users\zinch\Documents\PSoC Creator\Workspace01\VoiceRepeater.cydsn\VoiceRepeater.cyprj|cd573e03-138c-48e6-8288-e9e298d92a48
-C:\Users\zinch\Documents\PSoC Creator\Workspace01\VoiceRepeater_onPSoC6.cydsn\VoiceRepeater_onPSoC6.cyprj|2669bddc-5b75-4bff-b59d-e01d693eb757
-C:\Users\zinch\Documents\PSoC Creator\Workspace01\CE220924_VDAC_Sine_DMA02.cydsn\CE220924_VDAC_Sine_DMA02.cyprj|73f4a199-a8f9-4e71-9f7b-0045877cb72e
-C:\Users\zinch\Documents\PSoC Creator\Workspace01\CE220925_VDAC_Sample_Hold01.cydsn\CE220925_VDAC_Sample_Hold01.cyprj|a67f6ba0-eb9b-44a9-b407-77d632ca79d4
+C:\Users\zinch\Documents\pokproj\VoiceRepeater_onPSoC6.cydsn\VoiceRepeater_onPSoC6.cyprj|53da9f0d-c260-4700-b589-de33b5211b35
+C:\Program Files (x86)\Cypress\PSoC Creator\4.3\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|bfdc8af5-3184-4ff4-8da7-bed8336adfcb
+C:\Users\zinch\OneDrive\Документи\PSoC Creator\4.3\Downloads ( 4.3).cylib\Downloads ( 4.3).cyprj|3ad07eac-f538-463e-8484-e17508f97024
+C:\Program Files (x86)\Cypress\PSoC Creator\4.3\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|335e4dea-08bf-4b70-8b46-1c4e6516bf02
+C:\Program Files (x86)\Cypress\PSoC Creator\4.3\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|47fcd771-99b7-43ba-a777-b8edd76e055e
+C:\Program Files (x86)\Cypress\PSoC Creator\4.3\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|9ca89587-e623-4843-b8d6-b26c7f02fb58

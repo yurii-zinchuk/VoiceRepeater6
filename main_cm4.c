@@ -26,10 +26,9 @@ int transform_codes();
 int play_voice();
 void no_recording_handler();
 
-uint16_t average;
+int16_t average;
 bool recorded = false;
 int16_t codes[SAMPLES];
-//int8_t voice[SAMPLES];
 
 
 int main(void)
@@ -85,17 +84,26 @@ int get_codes()
     {
         ADC_IsEndConversion(CY_SAR_WAIT_FOR_RESULT);
         uint16_t ADC_Result = ADC_GetResult16(0);
-
+        
         codes[i] = ADC_Result;
-
         /*
-        int16_t Mic_mV = ADC_CountsTo_mVolts(0, ADC_Result);
-        voice[i] = (int8_t) Mic_mV - 1600;
+        char8 text[8];
+        sprintf(text, "%d", ADC_Result);
+        printf("%s\r\n", text);
         */
     }
     
     ADC_StopConvert();
     ADC_Stop();
+    
+    /*
+    for (int i = 0; i < SAMPLES; ++i)
+    {
+        char8 text[8];
+        sprintf(text, "%d", codes[i]);
+        printf("%s\r\n", text);
+    }
+    */
     
     return 0;
 }
@@ -107,7 +115,7 @@ int transform_codes()
     for (int i = 0; i < SAMPLES; ++i)
         sum += codes[i];
         
-    average = sum / SAMPLES;
+    average = sum / (SAMPLES);
 
     uint16_t max_amp = 0;
     for (int i = 0; i < SAMPLES; ++i)
@@ -120,9 +128,39 @@ int transform_codes()
             max_amp = -codes[i];
     }
     
+    /*
+    for (int i = 0; i < SAMPLES; ++i)
+    {
+        char8 text[8];
+        sprintf(text, "%d", codes[i]);
+        printf("%s\r\n", text);
+    }
+    char8 text[8];
+    sprintf(text, "%d", max_amp);
+    printf("%s\r\n", text);
+    */
+    
     for (int i = 0; i < SAMPLES; ++i)
         codes[i] = 2048 + (2047 * codes[i] / max_amp);
         
+    /*
+    for (int i = 0; i < SAMPLES; ++i)
+    {
+        char8 text[8];
+        sprintf(text, "%d", codes[i]);
+        printf("%s\r\n", text);
+    }
+    
+
+    char8 text[8];
+    sprintf(text, "%d", max_amp);
+    printf("%s\r\n", text);
+
+    sprintf(text, "%d", average);
+    printf("%s\r\n", text);
+    
+    */
+
     return 0;
 }
 
@@ -139,15 +177,6 @@ int play_voice()
         VDAC_1_SetValue(codes[i]);
         
         CyDelayUs(125);
-        
-        /*
-        char8 text[8];
-        sprintf(text, "%d", voice[idx]);
-        printf("%s\r\n", text);
-
-        int32_t value = 10*voice[idx] + 1650;
-        int32_t value = 2048 + codes[idx];
-        */
     }
     
     VDAC_1_Stop();

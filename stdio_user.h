@@ -14,8 +14,10 @@
 * the software package with which this file was provided.
 *******************************************************************************/
 
+#include "project.h"
 #ifndef STDIO_USER_H
 #define STDIO_USER_H
+
 /**
 * \addtogroup group_retarget_io
 * \{
@@ -159,7 +161,6 @@
 * \}
 */
 #include "cy_device_headers.h"
-#include "project.h"
 
 /* Must remain uncommented to use this utility */
 #define IO_STDOUT_ENABLE

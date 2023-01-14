@@ -1,12 +1,12 @@
 /***************************************************************************//**
 * \file cy_sysclk.c
-* \version 2.0
+* \version 1.20
 *
 * Provides an API implementation of the sysclk driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2020, Cypress Semiconductor Corporation. All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation. All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -35,58 +35,7 @@
                                  SRSS_CLK_TRIM_ECO_CTL_FTRIM_Msk  | \
                                  SRSS_CLK_TRIM_ECO_CTL_RTRIM_Msk  | \
                                  SRSS_CLK_TRIM_ECO_CTL_GTRIM_Msk)
-
-#define CY_SYSCLK_ECO_FREQ_MIN (16000000UL) /* 16 MHz */
-#define CY_SYSCLK_ECO_FREQ_MAX (35000000UL) /* 35 MHz */
-#define CY_SYSCLK_ECO_CSM_MAX  (100UL)      /* 100 pF */
-#define CY_SYSCLK_ECO_ESR_MAX  (1000UL)     /* 1000 Ohm */
-#define CY_SYSCLK_ECO_DRV_MAX  (2000UL)     /* 2 mW */
-
-#define CY_SYSCLK_ECO_MIN_AMPL (650UL)     /* mV, the maximum crystal driving amplitude */
-#define CY_SYSCLK_ECO_MAX_AMP_SEC (3UL)    /* items, the maximum amplification sections */
-
-/* The constant values accordingly to the current ECO calculation algorithm: */
-#define CY_SYSCLK_ECO_WDTRIM   (7UL)
-#define CY_SYSCLK_ECO_ATRIM    (15UL)
-#define CY_SYSCLK_ECO_FTRIM    (3UL)
-#define CY_SYSCLK_ECO_RTRIM    (0UL)
-
-#define CY_SYSCLK_ECO_IS_FREQ_VALID(freq) ((CY_SYSCLK_ECO_FREQ_MIN <= (freq)) && ((freq) <= CY_SYSCLK_ECO_FREQ_MAX))
-#define CY_SYSCLK_ECO_IS_CSM_VALID(csm)   ((0UL < (csm)) && ((csm) <= CY_SYSCLK_ECO_CSM_MAX))
-#define CY_SYSCLK_ECO_IS_ESR_VALID(esr)   ((0UL < (esr)) && ((esr) <= CY_SYSCLK_ECO_ESR_MAX))
-#define CY_SYSCLK_ECO_IS_DRV_VALID(drv)   ((0UL < (drv)) && ((drv) <= CY_SYSCLK_ECO_DRV_MAX))
-
-
-/******************************************************************************
-* Function Name: cy_sqrt
-* Calculates square root.
-* The algorithm is based on the 'half division' method.
-* The input is 32-bit wide.
-* The result is 16-bit wide.
-*******************************************************************************/
-static uint32_t cy_sqrt(uint32_t x);
-static uint32_t cy_sqrt(uint32_t x)
-{
-    uint32_t i;
-    uint32_t res = 0UL;
-    uint32_t add = 0x8000UL;
-
-    for(i = 0UL; i < 16UL; i++)
-    {
-        uint32_t tmp = res | add;
-
-        if (x >= (tmp * tmp))
-        {
-            res = tmp;
-        }
-
-        add >>= 1U;
-    }
-
-    return (res);
-}
 /** \endcond */
-
 /**
 * \addtogroup group_sysclk_eco_funcs
 * \{
@@ -95,101 +44,120 @@ static uint32_t cy_sqrt(uint32_t x)
 * Function Name: Cy_SysClk_EcoConfigure
 ****************************************************************************//**
 *
-* Configures the external crystal oscillator (ECO) trim bits based on crystal
+* Configures the external crystal oscillator (ECO) trim bits based on crystal 
 * characteristics. This function should be called only when the ECO is disabled.
 *
 * \param freq Operating frequency of the crystal in Hz.
-* Valid range: 16000000...35000000 (16..35 MHz).
 *
-* \param cSum The summary capacitance of
-* C0 (the crystal itself shunt capacitance) and
-* Cload (the parallel load capacitance), in pF.
-* So cSum = C0 + Cload.
-* Valid range: 1...100.
+* \param cLoad Crystal load capacitance in pF.
 *
-* \param esr Effective series resistance of the crystal in Ohms.
-* Valid range: 1...1000.
+* \param esr Effective series resistance of the crystal in ohms.
 *
 * \param driveLevel Crystal drive level in uW.
-* Valid range: 1...2000.
 *
-* \return Error / status code: \n
-* CY_SYSCLK_SUCCESS - ECO configuration completed successfully \n
-* CY_SYSCLK_BAD_PARAM - One or more invalid parameters \n
+* \return Error / status code:<br>
+* CY_SYSCLK_SUCCESS - ECO configuration completed successfully<br>
+* CY_SYSCLK_BAD_PARAM - One or more invalid parameters<br>
 * CY_SYSCLK_INVALID_STATE - ECO already enabled
 *
 * \note
-* The following calculations are implemented in the 32-bit integer math:
+* The following calculations are implemented, generally in floating point:
 *
 * \verbatim
-*   freqKhz = freq / 1000
-*   maxAmpl = sqrt(drivelevel / 2 / esr) / 3.14 / freqKhz / cSum
-*   ampSect = INT(5 * 4 * 3.14^2 * freqKhz^2 * cSum^2 * 4 * esr / 1000000000 / 1000000 / 9)
+*   freqMHz = freq / 1000000
+*   max amplitude Vpp = 1000 * sqrt(drivelevel / 2 / esr) / 3.14 / freqMHz / cLoad
+*   gm_min mA/V = 5 * 4 * 3.14 * 3.14 * freqMhz^2 * cLoad^2 * 4 * esr / 1000000000
+*   Number of amplifier sections = INT(gm_min / 4.5)
 *
-*   As a result of the above calculations, max amplitude must be >= 0.65V, and the
+*   As a result of the above calculations, max amplitude must be >= 0.5, and the
 *   number of amplifier sections must be <= 3, otherwise this function returns with
 *   a parameter error.
 *
-*   atrim = 15
-*   agc_en = 1
-*   wdtrim = 7
-*   gtrim = ampSect > 1 ? ampSect : ampSect == 1 ? 0 : 1
-*   rtrim = 0
-*   ftrim = 3
+*   atrim = if (max amplitude < 0.5) then error
+*           else 2 * the following:
+*                    max amplitude < 0.6: 0
+*                    max amplitude < 0.7: 1
+*                    max amplitude < 0.8: 2
+*                    max amplitude < 0.9: 3
+*                    max amplitude < 1.15: 5
+*                    max amplitude < 1.275: 6
+*                    max amplitude >= 1.275: 7
+*   wdtrim = if (max amplitude < 0.5) then error
+*            else 2 * the following:
+*                     max amplitude < 1.2: INT(5 * max amplitude) - 2
+*                     max amplitude >= 1.2: 3
+*   gtrim = if (number of amplifier sections > 3) then error
+*           else the following:
+*                number of amplifier sections > 1: number of amplifier sections
+*                number of amplifier sections = 1: 0
+*                number of amplifier sections < 1: 1
+*   rtrim = if (gtrim = error) then error
+*           else the following:
+*                freqMHz > 26.8: 0
+*                freqMHz > 23.33: 1
+*                freqMHz > 16.5: 2
+*                freqMHz <= 16.5: 3
+*   ftrim = if (atrim = error) then error
+*           else INT(atrim / 2)
 * \endverbatim
 *
+*
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_EcoConfigure
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_EcoConfigure
 *
 *******************************************************************************/
-cy_en_sysclk_status_t Cy_SysClk_EcoConfigure(uint32_t freq, uint32_t cSum, uint32_t esr, uint32_t driveLevel)
+cy_en_sysclk_status_t Cy_SysClk_EcoConfigure(uint32_t freq, uint32_t cLoad, uint32_t esr, uint32_t driveLevel)
 {
-    cy_en_sysclk_status_t retVal = CY_SYSCLK_BAD_PARAM;
-
-    if (0UL != (SRSS_CLK_ECO_CONFIG_ECO_EN_Msk & SRSS_CLK_ECO_CONFIG))
+    /* error if ECO is not disabled - any of the 3 enable bits are set */
+    cy_en_sysclk_status_t retVal = CY_SYSCLK_INVALID_STATE;
+    if (0UL == (SRSS_CLK_ECO_CONFIG_ECO_EN_Msk & SRSS_CLK_ECO_CONFIG))
     {
-        retVal = CY_SYSCLK_INVALID_STATE;
-    }
-    else if ((CY_SYSCLK_ECO_IS_FREQ_VALID(freq)) &&
-             (CY_SYSCLK_ECO_IS_CSM_VALID(cSum)) &&
-             (CY_SYSCLK_ECO_IS_ESR_VALID(esr)) &&
-             (CY_SYSCLK_ECO_IS_DRV_VALID(driveLevel)))
-    {
-        /* Calculate intermediate values */
-        uint32_t freqKhz = CY_SYSCLK_DIV_ROUND(freq, 1000UL);
+        /* calculate intermediate values */
+        float32_t freqMHz = (float32_t)freq / 1000000.0f;
+        float32_t maxAmplitude =
+            (1000.0f * ((float32_t)sqrt((float64_t)((float32_t)driveLevel / (2.0f * (float32_t)esr))))) /
+            (3.14f * freqMHz * (float32_t)cLoad);
+        float32_t gm_min =
+            (788.8f /*5 * 4 * 3.14 * 3.14 * 4*/ * freqMHz * freqMHz * (float32_t)cLoad * (float32_t)cLoad) /
+            1000000000.0f;
+        uint32_t nAmpSections = (uint32_t)(gm_min / 4.5f);
 
-        uint32_t maxAmpl = CY_SYSCLK_DIV_ROUND((159155UL * /* 5 * 100000 / PI */
-                   cy_sqrt(CY_SYSCLK_DIV_ROUND(2000000UL * driveLevel, esr))), /* Scaled by 2 */
-                                               (freqKhz * cSum)); /* The result is scaled by 10^3 */
-
-        /* 10^9 / (5 * 4 * 4 * PI^2) = 1266514,7955292221430484932901216.. -> 126651, scaled by 10 */
-        uint32_t ampSect = (CY_SYSCLK_DIV_ROUND(cSum * cSum *
-                            CY_SYSCLK_DIV_ROUND(freqKhz * freqKhz, 126651UL), 100UL) * esr) / 900000UL;
-
-        if ((maxAmpl >= CY_SYSCLK_ECO_MIN_AMPL) && (ampSect <= CY_SYSCLK_ECO_MAX_AMP_SEC))
+        /* Error if input parameters cause erroneous intermediate values. */
+        retVal = CY_SYSCLK_BAD_PARAM;
+        if ((maxAmplitude >= 0.5f) && (nAmpSections <= 3UL))
         {
-            uint32_t gtrim = (ampSect > 1UL) ? ampSect :
-                            ((ampSect == 1UL) ? 0UL : 1UL);
+            uint32_t atrim, wdtrim, gtrim, rtrim, ftrim, reg;
 
-            /* Update all fields of trim control register with one write, without changing the ITRIM field */
-            uint32_t reg = _VAL2FLD(SRSS_CLK_TRIM_ECO_CTL_WDTRIM, CY_SYSCLK_ECO_WDTRIM) |
-                           _VAL2FLD(SRSS_CLK_TRIM_ECO_CTL_ATRIM,  CY_SYSCLK_ECO_ATRIM)  |
-                           _VAL2FLD(SRSS_CLK_TRIM_ECO_CTL_FTRIM,  CY_SYSCLK_ECO_FTRIM)  |
-                           _VAL2FLD(SRSS_CLK_TRIM_ECO_CTL_RTRIM,  CY_SYSCLK_ECO_RTRIM)  |
-                           _VAL2FLD(SRSS_CLK_TRIM_ECO_CTL_GTRIM,  gtrim);
+            atrim = 2UL * ((maxAmplitude < 0.6f) ? 0UL :
+                           ((maxAmplitude < 0.7f) ? 1UL :
+                            ((maxAmplitude < 0.8f) ? 2UL :
+                             ((maxAmplitude < 0.9f) ? 3UL :
+                              ((maxAmplitude < 1.15f) ? 5UL :
+                               ((maxAmplitude < 1.275f) ? 6UL : 7UL))))));
 
+            wdtrim = 2UL * ((maxAmplitude < 1.2f) ? (uint32_t)(((uint32_t)(5.0f * maxAmplitude)) - 2UL) : 3UL);
+
+            gtrim = ((nAmpSections > 1UL) ? nAmpSections :
+                     ((nAmpSections == 1UL) ? 0UL : 1UL));
+
+            rtrim = ((freqMHz > 26.8f) ? 0UL :
+                     ((freqMHz > 23.33f) ? 1UL :
+                      ((freqMHz > 16.5f) ? 2UL : 3UL)));
+
+            ftrim = atrim / 2UL;
+
+            /* update all fields of trim control register with one write, without changing the ITRIM field */
+            reg = _VAL2FLD(SRSS_CLK_TRIM_ECO_CTL_WDTRIM, wdtrim) |
+                  _VAL2FLD(SRSS_CLK_TRIM_ECO_CTL_ATRIM, atrim)   |
+                  _VAL2FLD(SRSS_CLK_TRIM_ECO_CTL_FTRIM, ftrim)   |
+                  _VAL2FLD(SRSS_CLK_TRIM_ECO_CTL_RTRIM, rtrim)   |
+                  _VAL2FLD(SRSS_CLK_TRIM_ECO_CTL_GTRIM, gtrim);
+                  
             CY_REG32_CLR_SET(SRSS_CLK_TRIM_ECO_CTL, CY_SYSCLK_TRIM_ECO, reg);
 
-            /* Enable the Automatic Gain Control */
-            SRSS_CLK_ECO_CONFIG |= SRSS_CLK_ECO_CONFIG_AGC_EN_Msk;
-
             retVal = CY_SYSCLK_SUCCESS;
-        }
-    }
-    else
-    {
-        /* Return CY_SYSCLK_BAD_PARAM */
-    }
+        } /* if valid parameters */
+    } /* if ECO not enabled */
 
     return (retVal);
 }
@@ -215,7 +183,7 @@ cy_en_sysclk_status_t Cy_SysClk_EcoConfigure(uint32_t freq, uint32_t cSum, uint3
 * if it affects the CLK_HF0 frequency.
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_EcoEnable
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_EcoEnable
 *
 *******************************************************************************/
 cy_en_sysclk_status_t Cy_SysClk_EcoEnable(uint32_t timeoutus)
@@ -278,7 +246,7 @@ cy_en_sysclk_status_t Cy_SysClk_EcoEnable(uint32_t timeoutus)
 * it affects the CLK_HF0 frequency and the frequency is decreasing.
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_ClkPathSetSource
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_ClkPathSetSource
 *
 *******************************************************************************/
 cy_en_sysclk_status_t Cy_SysClk_ClkPathSetSource(uint32_t clkPath, cy_en_clkpath_in_sources_t source)
@@ -314,7 +282,7 @@ cy_en_sysclk_status_t Cy_SysClk_ClkPathSetSource(uint32_t clkPath, cy_en_clkpath
 * \return \ref cy_en_clkpath_in_sources_t
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_ClkPathGetSource
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_ClkPathGetSource
 *
 *******************************************************************************/
 cy_en_clkpath_in_sources_t Cy_SysClk_ClkPathGetSource(uint32_t clkPath)
@@ -392,7 +360,7 @@ cy_en_clkpath_in_sources_t Cy_SysClk_ClkPathGetSource(uint32_t clkPath)
 * the FLL is the source of CLK_HF0 and the FLL frequency is decreasing.
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_FllConfigure
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_FllConfigure
 *
 *******************************************************************************/
 cy_en_sysclk_status_t Cy_SysClk_FllConfigure(uint32_t inputFreq, uint32_t outputFreq, cy_en_fll_pll_output_mode_t outputMode)
@@ -533,7 +501,7 @@ cy_en_sysclk_status_t Cy_SysClk_FllConfigure(uint32_t inputFreq, uint32_t output
 * the FLL is the source of CLK_HF0 and the FLL frequency is decreasing.
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_FllManualConfigure
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_FllManualConfigure
 *
 *******************************************************************************/
 cy_en_sysclk_status_t Cy_SysClk_FllManualConfigure(const cy_stc_fll_manual_config_t *config)
@@ -595,7 +563,7 @@ cy_en_sysclk_status_t Cy_SysClk_FllManualConfigure(const cy_stc_fll_manual_confi
 * \param config \ref cy_stc_fll_manual_config_t
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_FllGetConfiguration
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_FllGetConfiguration
 *
 *******************************************************************************/
 void Cy_SysClk_FllGetConfiguration(cy_stc_fll_manual_config_t *config)
@@ -646,7 +614,7 @@ void Cy_SysClk_FllGetConfiguration(cy_stc_fll_manual_config_t *config)
 * the FLL is the source of CLK_HF0 and the CLK_HF0 frequency is increasing.
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_FllEnable
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_FllEnable
 *
 *******************************************************************************/
 cy_en_sysclk_status_t Cy_SysClk_FllEnable(uint32_t timeoutus)
@@ -781,7 +749,7 @@ cy_en_sysclk_status_t Cy_SysClk_FllEnable(uint32_t timeoutus)
 * the PLL is the source of CLK_HF0 and the PLL frequency is decreasing.
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_PllConfigure
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_PllConfigure
 *
 *******************************************************************************/
 cy_en_sysclk_status_t Cy_SysClk_PllConfigure(uint32_t clkPath, const cy_stc_pll_config_t *config)
@@ -888,7 +856,7 @@ cy_en_sysclk_status_t Cy_SysClk_PllConfigure(uint32_t clkPath, const cy_stc_pll_
 * the PLL is the source of CLK_HF0 and the PLL frequency is decreasing.
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_PllManualConfigure
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_PllManualConfigure
 *
 *******************************************************************************/
 cy_en_sysclk_status_t Cy_SysClk_PllManualConfigure(uint32_t clkPath, const cy_stc_pll_manual_config_t *config)
@@ -945,7 +913,7 @@ cy_en_sysclk_status_t Cy_SysClk_PllManualConfigure(uint32_t clkPath, const cy_st
 * CY_SYSCLK_BAD_PARAM - invalid clock path number
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_PllGetConfiguration
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_PllGetConfiguration
 *
 *******************************************************************************/
 cy_en_sysclk_status_t Cy_SysClk_PllGetConfiguration(uint32_t clkPath, cy_stc_pll_manual_config_t *config)
@@ -995,7 +963,7 @@ cy_en_sysclk_status_t Cy_SysClk_PllGetConfiguration(uint32_t clkPath, cy_stc_pll
 * the PLL is the source of CLK_HF0 and the CLK_HF0 frequency is decreasing.
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_PllEnable
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_PllEnable
 *
 *******************************************************************************/
 cy_en_sysclk_status_t Cy_SysClk_PllEnable(uint32_t clkPath, uint32_t timeoutus)
@@ -1099,7 +1067,7 @@ static bool preventCounting = false;
 * the measured clock frequency may not be accurate.
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_StartClkMeasurementCounters
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_StartClkMeasurementCounters
 *
 *******************************************************************************/
 cy_en_sysclk_status_t Cy_SysClk_StartClkMeasurementCounters(cy_en_meas_clks_t clock1, uint32_t count1, cy_en_meas_clks_t clock2)
@@ -1329,7 +1297,7 @@ uint32_t Cy_SysClk_ClkMeasurementCountersGetFreq(bool measuredClock, uint32_t re
 * \note The watchdog timer (WDT) must be unlocked before calling this function.
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_IloTrim
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_IloTrim
 *
 *******************************************************************************/
 /** \cond INTERNAL */
@@ -1394,7 +1362,7 @@ int32_t Cy_SysClk_IloTrim(uint32_t iloFreq)
 * \return Change in trim value; 0 if done, that is, no change in trim value.
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_PiloTrim
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_PiloTrim
 *
 *******************************************************************************/
 /** \cond INTERNAL */
@@ -1506,7 +1474,7 @@ int32_t Cy_SysClk_PiloTrim(uint32_t piloFreq)
 * to regain its frequency lock.
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_DeepSleepCallback
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_DeepSleepCallback
 *
 *******************************************************************************/
 cy_en_syspm_status_t Cy_SysClk_DeepSleepCallback(cy_stc_syspm_callback_params_t * callbackParams, cy_en_syspm_callback_mode_t mode)
@@ -1675,7 +1643,7 @@ cy_en_syspm_status_t Cy_SysClk_DeepSleepCallback(cy_stc_syspm_callback_params_t 
 * the source input is clk_ext, ECO, clk_althf, dsi_out, or clk_altlf.
 *
 * \funcusage
-* \snippet sysclk/2.0/snippet/main.c snippet_Cy_SysClk_PeriphGetFrequency
+* \snippet sysclk/1.20/snippet/main.c snippet_Cy_SysClk_PeriphGetFrequency
 *
 *******************************************************************************/
 uint32_t Cy_SysClk_PeriphGetFrequency(cy_en_divider_types_t dividerType, uint32_t dividerNum)
